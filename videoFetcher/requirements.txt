@@ -1,0 +1,6 @@
+celery 
+dateutil 
+requests
+datetime 
+rest_framework
+pathlib

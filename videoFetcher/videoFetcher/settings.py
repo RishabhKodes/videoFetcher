@@ -134,7 +134,7 @@ CELERY_BROKER_URL = "redis://127.0.0.1:6379"
 CELERY_RESULT_BACKEND = "redis://127.0.0.1:6379"
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 CELERY_BEAT_SCHEDULE = {
-    "video_fetch_task": {
+    "videoSearch_task": {
         "task": "videoFetcher.celery.videoSearch",
         "schedule": crontab(minute=f"*/{CHECK_INTV}"),
     },
@@ -142,7 +142,7 @@ CELERY_BEAT_SCHEDULE = {
 
 
 # YouTube env variables defined here
-YOUTUBE_DATA_API_KEY = # Insert your YouTube Data API key here
+YOUTUBE_DATA_API_KEY =  # insert your youtube data api key here
 YOUTUBE_SEARCH_URL = 'https://www.googleapis.com/youtube/v3/search'
 SEARCH_PARAM_PART='snippet'
 SEARCH_PARAM_TYPE='video'
