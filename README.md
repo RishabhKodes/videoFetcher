@@ -3,9 +3,10 @@ An API to fetch latest videos sorted in reverse chronological order of their pub
 
 <details>
 <summary>Tech Stack used in the project:</summary>
-A django server along with a sqlite3 database, using celery and redis as a broker for the real time processing of the api calls.
+    ```
+    A django server along with a sqlite3 database, using celery and redis as a broker for the real time processing of the api calls.
+    ```
 </details>
-
 <br>
 
 <h3> Pre-installation steps: </h3>
