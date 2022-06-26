@@ -4,6 +4,10 @@ from django.conf import settings
 from youtube_search.serializers import VideoSerializer
 from .pagination import StandardResultsSetPagination
 
+'''
+        This function is used to get the videos from the database.
+        Paginates and serializes the data from the db which gets updated peridically.
+'''
 
 @api_view(['GET'])
 def getVideos(request):
