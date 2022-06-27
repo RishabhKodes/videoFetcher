@@ -1,11 +1,13 @@
 # videoFetcher
 An API to fetch latest videos sorted in reverse chronological order of their publishing date-time from YouTube for a given tag/search query in a paginated response.
 
+<br>
+
 <details>
-<summary>Tech Stack used in the project:</summary>
-    ```
-    A django server along with a sqlite3 database, using celery and redis as a broker for the real time processing of the api calls.
-    ```
+        <summary>Tech Stack used in the project:</summary>
+        
+        A django server along with a sqlite3 database, using celery and redis as a broker for the real time processing of the api calls using the YouTube search API.
+        
 </details>
 <br>
 
@@ -14,7 +16,7 @@ An API to fetch latest videos sorted in reverse chronological order of their pub
   * Start the redis-server locally (in a seperate terminal):
     <p>If you are using Linux, type the below command for running the redis server:<p>
 
-    $ redis-cli 
+         $ redis-cli 
 
 <br>
 <h3> Steps to run locally: </h3>
