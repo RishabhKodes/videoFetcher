@@ -27,42 +27,45 @@ logger = get_task_logger(__name__)
 
 @app.task(bind=True)
 def videoSearch(self):
+    try:
+        search_url = settings.YOUTUBE_SEARCH_URL
+        
+        # setting the time according to rfc 3339 format
+        time_difference = (datetime.now() - timedelta(minutes=settings.TIME_INTERVAL)).isoformat()
 
-    search_url = settings.YOUTUBE_SEARCH_URL
-    
-    # setting the time according to rfc 3339 format
-    time_difference = (datetime.now() - timedelta(minutes=settings.TIME_INTERVAL)).isoformat()
+        # Fetching the video data from the YT api (calling the parameters below)
+        search_params = {
+                'part' : settings.SEARCH_PARAM_PART,
+                'q' : settings.SEARCH_PARAM_QUERY,
+                'key' : settings.YOUTUBE_DATA_API_KEY,
+                'maxResults' : settings.SEARCH_PARAM_MAX_RESULTS,
+                'order': settings.SEARCH_PARAM_ORDER,
+                'type' : settings.SEARCH_PARAM_TYPE,
+                'publishedAfter' : time_difference[0:19]+'Z'  # defining time difference of 60 seconds to get the videos published after the time difference
+            }
 
-    # Fetching the video data from the YT api (calling the parameters below)
-    search_params = {
-            'part' : settings.SEARCH_PARAM_PART,
-            'q' : settings.SEARCH_PARAM_QUERY,
-            'key' : settings.YOUTUBE_DATA_API_KEY,
-            'maxResults' : settings.SEARCH_PARAM_MAX_RESULTS,
-            'order': settings.SEARCH_PARAM_ORDER,
-            'type' : settings.SEARCH_PARAM_TYPE,
-            'publishedAfter' : time_difference[0:19]+'Z'  # defining time difference of 60 seconds to get the videos published after the time difference
-        }
+        r = requests.get(search_url, params=search_params)
+        # Parsing the json data from the YT api
+        search_response = r.json()
+        print("Received "+str(len(search_response))+" more videos.")
 
-    r = requests.get(search_url, params=search_params)
-    # Parsing the json data from the YT api
-    search_response = r.json()
-    print("Received "+str(len(search_response))+" more videos.")
-
-    for item in search_response.get("items", []):
-        '''
-            Make sure no duplicate videos are added to the database, checking that 
-            with the condition below using the video id.
-        '''
-        if(not Video.objects.filter(video_link=item["id"]["videoId"]).exists()):
-            # getting esssential data from the json as per the db schema
-            video = Video(
-                id=item["id"]["videoId"],
-                title=item["snippet"]["title"],
-                description=item["snippet"]["description"],
-                published_on=parser.parse(item["snippet"]["publishedAt"]),
-                thumbnail_url=item["snippet"]["thumbnails"]["default"]["url"],
-                video_link=settings.BASE_URL +item["id"]["videoId"],
-            )
-            video.save()  # saving the video to the database
-    logger.info("Video database updated at "+datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        for item in search_response.get("items", []):
+            '''
+                Make sure no duplicate videos are added to the database, checking that 
+                with the condition below using the video id.
+            '''
+            if(not Video.objects.filter(video_link=item["id"]["videoId"]).exists()):
+                # getting esssential data from the json as per the db schema
+                video = Video(
+                    id=item["id"]["videoId"],
+                    title=item["snippet"]["title"],
+                    description=item["snippet"]["description"],
+                    published_on=parser.parse(item["snippet"]["publishedAt"]),
+                    thumbnail_url=item["snippet"]["thumbnails"]["default"]["url"],
+                    video_link=settings.BASE_URL +item["id"]["videoId"],
+                )
+                video.save()  # saving the video to the database
+        logger.info("Video database updated at "+datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+    except Exception as e:
+        logger.error("Error in videoSearch task: "+str(e))
+        raise e
