@@ -52,5 +52,5 @@ An API to fetch latest videos sorted in reverse chronological order of their pub
 
 
 <br><h4>
-  10. To access the dashboard go to http://127.0.0.1:8000/video (the respective pages can be accessed as params in the url -> /videos/?page=2)
+  10. To access the dashboard go to http://127.0.0.1:8000/videos (the respective pages can be accessed as params in the url -> /videos/?page=2)
 <br>
